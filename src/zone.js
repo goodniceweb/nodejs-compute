@@ -653,14 +653,16 @@ class Zone extends common.ServiceObject {
           return;
         }
         delete body.os;
+        const defaultDiskParams = body.defaultDiskParams || {}
         body.disks = body.disks || [];
         body.disks.unshift({
           autoDelete: true,
           boot: true,
-          initializeParams: {
+          initializeParams: Object.assign({
             sourceImage: image.selfLink,
-          },
+          }, defaultDiskParams),
         });
+        delete body.defaultDiskParams;
         self.createVM(name, body, callback);
       });
       return;
